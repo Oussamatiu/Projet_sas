@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#define MAX 100
+#define MAX 5
 
 int id, count = 0;
 typedef struct
@@ -30,7 +30,8 @@ int findPos()
 
 int main()
 {
-    Produit produits[MAX];
+    Produit produits[MAX]={{1,"iphone","phone",500,10, "nadii"}};
+   
     Client clients[MAX];
     int choix, countProduit, choixCatalogue, choixTri, choixTriCroissanat;
     int choixProfil;
@@ -136,6 +137,7 @@ int main()
                 printf("3.reture menu principal\n");
                 printf("voter choix : ");
                 scanf("%d", &choixSolde);
+                
                 switch (choixSolde)
                 {
                 case 1:
@@ -161,26 +163,26 @@ int main()
                 printf("2.Recherche produits\n");
                 printf("3.Tri des produits\n");
                 printf("4.Détails produit\n");
-                printf("5.Détails produit\n");
+                printf("5.quitter\n");
                 printf("voter choix : ");
                 scanf("%d", &choixCatalogue);
                 switch (choixCatalogue)
                 {
                 case 1:
-                    if (!countProduit)
+                    if (1)
                     {
                         printf("pas de produits\n");
                     }
                     else
                     {
-                        for (int i = 0; i < countProduit; i++)
+                        for (int i = 0; i < 5; i++)
                         {
                             printf("======================\n");
-                            printf("id de produit : %d", produits[i].idProduit);
-                            printf("nom de produit : %s", produits[i].nom);
-                            printf("categorie de produit : %d", produits[i].categorie);
-                            printf("prix de produit : %.2fDH", produits[i].prix);
-                            printf("description de produit : %s", produits[i].description);
+                            printf("id de produit : %d\n", produits[i].idProduit);
+                            printf("nom de produit : %s\n", produits[i].nom);
+                            printf("categorie de produit : %s\n", produits[i].categorie);
+                            printf("prix de produit : %.2fDH\n", produits[i].prix);
+                            printf("description de produit : %s\n", produits[i].description);
                         }
                     }
                     break;
@@ -333,6 +335,36 @@ int main()
 
             break;
         case 4:
+            int choixCaregorie , produitAcheter;
+            for (int i = 0; i < countProduit; i++)
+            {
+                printf("%d.%s/n",i+1, produits[i].categorie);
+            }
+            printf("votre choix : ");
+            scanf("%d",&choixCatalogue);
+            for (int i = 0; i < countProduit; i++)
+            {
+                if(strcmp(produits[i].categorie , produits[choixCaregorie-1].categorie)==0){
+                 
+                        printf("produit %d:\n", i + 1);
+                        printf("id de produit : %d\n", produits[i].idProduit);
+                        printf("nom de produit : %s\n", produits[i].nom);
+                        printf("categorie de produit : %s\n", produits[i].categorie);
+                        printf("prix de produit : %.2f\n", produits[i].prix);
+                        printf("prix de produit : %d\n", produits[i].stock);
+                        printf("description de produit : %s\n", produits[i].description);
+                   
+                    
+                }
+            }
+            printf("quel numero de produit qui veux acheter : ");
+            scanf("%d",&produitAcheter);
+            if (clients[count].solde < produits[produitAcheter-1].prix)
+            {
+                printf("pas de l argent\n");
+            }else {
+                clients[count].solde-=produits[produitAcheter-1].prix;
+            }
             
             break;
         case 5:
