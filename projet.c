@@ -14,8 +14,8 @@ int id, count = 0;
 int choixSH;
 float totalAchates;
 int choixSatatique;
- int moisChercher ,trouveMois = 0;
- int tableauxProduit[20] , countTab=0;
+int moisChercher ,trouveMois = 0;
+int countTab=0 , resulta = 0;
 
 
 typedef struct
@@ -138,6 +138,9 @@ void gestionProfil()
                         scanf("%s", newPrenom);
                         strcpy(clients[count].prenom, newPrenom);
                         break;
+                    case 3:
+                     printf("returne a la menu\n");
+                     break;
                     default:
                         printf("invalide input\n");
                         break;
@@ -153,13 +156,16 @@ void gestionProfil()
             }
             else
                 printf("informations client\n");
-            printf("nom : %s\n", clients[count].nom);
-            printf("prenom : %s\n", clients[count].prenom);
-            printf("email : %s\n", clients[count].email);
-            printf("solde : %.2fDH\n", clients[count].solde);
+                printf("nom : %s\n", clients[count].nom);
+                printf("prenom : %s\n", clients[count].prenom);
+                printf("email : %s\n", clients[count].email);
+                printf("solde : %.2fDH\n", clients[count].solde);
             break;
-
+        case 4:
+          printf("reture a la menu prancipal\n");
+        break;
         default:
+
             printf("invalide input\n");
             break;
         }
@@ -174,6 +180,7 @@ void gestionSolde()
     else
         do
         {
+            printf("====================\n");
             printf("Gestion du Solde Virtuel\n");
             printf("1.Consultation du solde\n");
             printf("2.Dépôt d'argent\n");
@@ -187,10 +194,24 @@ void gestionSolde()
                 printf("solde : %.2fDH\n", clients[count].solde);
                 break;
             case 2:
-                printf("montant qui depot : ");
+                getchar();
+                printf("montant depot : ");
                 scanf("%f", &montantDepot);
-                clients[count].solde += montantDepot;
+                if (resulta != 1)
+                {
+                    printf("input invalide\n");
+                }
+                else if (montantDepot <= 0)
+                {
+                    printf("montant doit etre positif\n");
+                }else{
+                   clients[count].solde += montantDepot;
+                   printf("succes\n");
+            }
                 break;
+            case 3:
+            printf("reture menu principal\n");
+            break;
             default:
                 printf("invalide input");
                 break;
@@ -207,7 +228,7 @@ void consultationProduit()
         printf("2.Recherche produits\n");
         printf("3.Tri des produits\n");
         printf("4.Détails produit\n");
-        printf("5.quitter\n");
+        printf("5.returne menu principal\n");
         printf("voter choix : ");
         scanf("%d", &choixCatalogue);
         switch (choixCatalogue)
@@ -221,7 +242,7 @@ void consultationProduit()
                 printf("nom de produit : %s\n", produits[i].nom);
                 printf("categorie de produit : %s\n", produits[i].categorie);
                 printf("prix de produit : %.2fDH\n", produits[i].prix);
-                printf("stock de produit : %dDH\n", produits[i].stock);
+                printf("stock de produit : %d\n", produits[i].stock);
                 printf("description de produit : %s\n", produits[i].description);
             }
 
@@ -240,7 +261,7 @@ void consultationProduit()
                     printf("nom de produit : %s\n", produits[i].nom);
                     printf("categorie de produit : %s\n", produits[i].categorie);
                     printf("prix de produit : %.2fDH\n", produits[i].prix);
-                    printf("stock de produit : %dDH\n", produits[i].stock);
+                    printf("stock de produit : %d\n", produits[i].stock);
                     printf("description de produit : %s\n", produits[i].description);
                     tourver = 1;
                 }
@@ -254,7 +275,8 @@ void consultationProduit()
         case 3:
             do
             {
-                printf("Tri des produits \n");
+                printf("===============\n");
+                printf("Tri des produits\n");
                 printf("1.tri par prix\n");
                 printf("2.tri par nom alphabetique\n");
                 printf("3.reture menu principal\n");
@@ -314,6 +336,7 @@ void consultationProduit()
                                 printf("nom de produit : %s\n", produits[i].nom);
                                 printf("categorie de produit : %s\n", produits[i].categorie);
                                 printf("prix de produit : %.2fDH\n", produits[i].prix);
+                                printf("stock de produit : %d\n", produits[i].stock);
                                 printf("description de produit : %s\n", produits[i].description);
                             }
 
@@ -365,8 +388,11 @@ void consultationProduit()
                                 printf("prix de produit : %.2fDH\n", produits[i].prix);
                                 printf("description de produit : %s\n", produits[i].description);
                             }
-
+                        case 3:
+                         printf("annule\n");
+                         break;
                         default:
+                            printf("input invalide\n");
                             break;
                         }
                     } while (choixTriCroissanat != 3);
@@ -413,10 +439,13 @@ void consultationProduit()
                         printf("nom de produit : %s\n", produits[i].nom);
                         printf("categorie de produit : %s\n", produits[i].categorie);
                         printf("prix de produit : %.2fDH\n", produits[i].prix);
+                        printf("stock de produit : %d\n", produits[i].stock);
                         printf("description de produit : %s\n", produits[i].description);
                     }
                     break;
-
+                case 3:
+                printf("reture menu principal\n");
+                break;
                 default:
                     printf("invalide input\n");
                     break;
@@ -435,6 +464,10 @@ void consultationProduit()
                 printf("description de produit : %s\n", produits[i].description);
             }
             break;
+        case 5:
+         printf("returne menu principal\n");
+        break;
+
         default:
             printf("invalide input");
             break;
@@ -462,7 +495,7 @@ void effectuerAchat()
         if (strcmp(produits[i].categorie, produits[choixCatalogue - 1].categorie) == 0)
         {
 
-            
+            printf("=====================\n");
             printf("id de produit : %d\n", produits[i].idProduit);
             printf("nom de produit : %s\n", produits[i].nom);
             printf("categorie de produit : %s\n", produits[i].categorie);
@@ -473,15 +506,8 @@ void effectuerAchat()
 
         }
     }
-  
-   
     printf("quel id de produit qui veux acheter : ");
     scanf("%d", &produitAcheter);
-    for (int i = 0; i < 5; i++)
-    {  
-        if
-    }
-    
     printf("donner quantite tu veux acheter : ");
     scanf("%d", &quantiteAchat);
     if (clients[count].solde < produits[produitAcheter - 1].prix * quantiteAchat)
