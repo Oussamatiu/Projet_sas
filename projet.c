@@ -15,6 +15,7 @@ int choixSH;
 float totalAchates;
 int choixSatatique;
  int moisChercher ,trouveMois = 0;
+ int tableauxProduit[20] , countTab=0;
 
 
 typedef struct
@@ -443,6 +444,7 @@ void consultationProduit()
 }
 void effectuerAchat()
 {
+    
     if (!checkProfil)
     {
         printf("creation de profil\n");
@@ -460,18 +462,26 @@ void effectuerAchat()
         if (strcmp(produits[i].categorie, produits[choixCatalogue - 1].categorie) == 0)
         {
 
-            printf("produit %d:\n", i + 1);
+            
             printf("id de produit : %d\n", produits[i].idProduit);
             printf("nom de produit : %s\n", produits[i].nom);
             printf("categorie de produit : %s\n", produits[i].categorie);
             printf("prix de produit : %.2f\n", produits[i].prix);
             printf("stock de produit : %d\n", produits[i].stock);
             printf("description de produit : %s\n", produits[i].description);
+            
+
         }
     }
-
-    printf("quel numero de produit qui veux acheter : ");
+  
+   
+    printf("quel id de produit qui veux acheter : ");
     scanf("%d", &produitAcheter);
+    for (int i = 0; i < 5; i++)
+    {  
+        if
+    }
+    
     printf("donner quantite tu veux acheter : ");
     scanf("%d", &quantiteAchat);
     if (clients[count].solde < produits[produitAcheter - 1].prix * quantiteAchat)
