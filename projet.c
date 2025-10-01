@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #define MAX 5
 
 int id, count = 0;
@@ -11,6 +12,19 @@ typedef struct
     char email[200];
     float solde;
 } Client;
+typedef struct
+{
+    int jour;
+    int mois;
+    int annee;
+} Date;
+typedef struct
+{
+    int id;
+    char nomProduit[30];
+    float prixProduit;
+    Date date;
+} Historique;
 typedef struct
 {
     int idProduit;
@@ -27,11 +41,20 @@ void creatProfil()
 int findPos()
 {
 }
-
+Date getDate()
+{
+    Date now;
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    now.jour = tm.tm_mday;
+    now.mois = tm.tm_mon + 1;
+    now.annee = tm.tm_year + 1900;
+    return now;
+}
 int main()
 {
-    Produit produits[MAX]={{1,"iphone","phone",500,10, "nadii"}};
-   
+    Produit produits[MAX] = {{1, "Ordinateur Portable", "electronic", 799.00, 5, "nadi"}, {2, "Martphone", "electronic", 499.00, 10, "nadi"}, {3, "Casque Audio", "electronic", 89.00, 15, "nadi"}, {4, "Souris", "electronic", 25, 20, "nadi"}, {5, "Clavier", "electronic", 45, 12, "nadi"}};
+    Historique historique[100];
     Client clients[MAX];
     int choix, countProduit, choixCatalogue, choixTri, choixTriCroissanat;
     int choixProfil;
@@ -39,6 +62,8 @@ int main()
     char newPrenom[30];
     float montantDepot;
     int choixModifie, choixSolde;
+    int choixCaregorie, produitAcheter, tourver = 0, countHistorique = 0;
+    ;
     do
     {
         printf("=== SYSTÈME D'ACHAT CLIENT ===\n");
@@ -137,7 +162,7 @@ int main()
                 printf("3.reture menu principal\n");
                 printf("voter choix : ");
                 scanf("%d", &choixSolde);
-                
+
                 switch (choixSolde)
                 {
                 case 1:
@@ -145,8 +170,9 @@ int main()
                     break;
                 case 2:
                     printf("montant qui depot : ");
-                    scanf("%d", &montantDepot);
+                    scanf("%f", &montantDepot);
                     clients[count].solde += montantDepot;
+                    break;
                 default:
                     printf("invalide input");
                     break;
@@ -169,42 +195,41 @@ int main()
                 switch (choixCatalogue)
                 {
                 case 1:
-                    if (1)
+
+                    for (int i = 0; i < 5; i++)
                     {
-                        printf("pas de produits\n");
+                        printf("======================\n");
+                        printf("id de produit : %d\n", produits[i].idProduit);
+                        printf("nom de produit : %s\n", produits[i].nom);
+                        printf("categorie de produit : %s\n", produits[i].categorie);
+                        printf("prix de produit : %.2fDH\n", produits[i].prix);
+                        printf("stock de produit : %dDH\n", produits[i].stock);
+                        printf("description de produit : %s\n", produits[i].description);
                     }
-                    else
-                    {
-                        for (int i = 0; i < 5; i++)
-                        {
-                            printf("======================\n");
-                            printf("id de produit : %d\n", produits[i].idProduit);
-                            printf("nom de produit : %s\n", produits[i].nom);
-                            printf("categorie de produit : %s\n", produits[i].categorie);
-                            printf("prix de produit : %.2fDH\n", produits[i].prix);
-                            printf("description de produit : %s\n", produits[i].description);
-                        }
-                    }
+
                     break;
                 case 2:
                     getchar();
                     printf("donner nom ou categorie de produits : ");
                     fgets(motRechercher, sizeof(motRechercher), stdin);
-                    for (int i = 0; i < countProduit; i++)
+                    motRechercher[strcspn(motRechercher, "\n")] = 0;
+                    for (int i = 0; i < 5; i++)
                     {
                         if (strcmp(produits[i].categorie, motRechercher) == 0 || strcmp(produits[i].nom, motRechercher) == 0)
                         {
                             printf("======================\n");
                             printf("id de produit : %d\n", produits[i].idProduit);
                             printf("nom de produit : %s\n", produits[i].nom);
-                            printf("categorie de produit : %d\n", produits[i].categorie);
+                            printf("categorie de produit : %s\n", produits[i].categorie);
                             printf("prix de produit : %.2fDH\n", produits[i].prix);
+                            printf("stock de produit : %dDH\n", produits[i].stock);
                             printf("description de produit : %s\n", produits[i].description);
+                            tourver = 1;
                         }
-                        else
-                        {
-                            printf("pas exisit %s dans categorie ou nom de produit\n", motRechercher);
-                        }
+                    }
+                    if (!tourver)
+                    {
+                        printf("pas exisit %s dans categorie ou nom de produit\n", motRechercher);
                     }
 
                     break;
@@ -230,11 +255,11 @@ int main()
                                 switch (choixTriCroissanat)
                                 {
                                 case 1:
-                                    for (int i = 0; i < countProduit; i++)
+                                    for (int i = 0; i < 5; i++)
                                     {
-                                        for (int j = 0; j < countProduit - i - 1; j++)
+                                        for (int j = 0; j < 5 - i - 1; j++)
                                         {
-                                            if (produits[j].prix > produits[j + 1].prix)
+                                            if (produits[j].prix < produits[j + 1].prix)
                                             {
                                                 int idChange;
                                                 char nomChange[30];
@@ -244,14 +269,13 @@ int main()
                                                 char descriptionChange[100];
                                                 idChange = produits[j].idProduit;
                                                 produits[j].idProduit = produits[j + 1].idProduit;
+                                                produits[j + 1].idProduit = idChange;
                                                 strcpy(nomChange, produits[j].nom);
                                                 strcpy(produits[j].nom, produits[j + 1].nom);
                                                 strcpy(produits[j + 1].nom, nomChange);
-
                                                 strcpy(categorieChange, produits[j].categorie);
                                                 strcpy(produits[j].categorie, produits[j + 1].categorie);
                                                 strcpy(produits[j + 1].categorie, categorieChange);
-
                                                 strcpy(descriptionChange, produits[j].description);
                                                 strcpy(produits[j].description, produits[j + 1].description);
                                                 strcpy(produits[j + 1].description, descriptionChange);
@@ -264,15 +288,24 @@ int main()
                                                 produits[j + 1].stock = stockChange;
                                             }
                                         }
+                                    }
+                                    for (int i = 0; i < 5; i++)
+                                    {
+                                        printf("======================\n");
+                                        printf("id de produit : %d\n", produits[i].idProduit);
+                                        printf("nom de produit : %s\n", produits[i].nom);
+                                        printf("categorie de produit : %s\n", produits[i].categorie);
+                                        printf("prix de produit : %.2fDH\n", produits[i].prix);
+                                        printf("description de produit : %s\n", produits[i].description);
                                     }
 
                                     break;
                                 case 2:
-                                    for (int i = 0; i < countProduit; i++)
+                                    for (int i = 0; i < 5; i++)
                                     {
-                                        for (int j = 0; j < countProduit - i - 1; j++)
+                                        for (int j = 0; j < 5 - i - 1; j++)
                                         {
-                                            if ((int)produits[j].nom > (int)produits[j + 1].nom)
+                                            if (produits[j].nom > produits[j + 1].nom)
                                             {
                                                 int idChange;
                                                 char nomChange[30];
@@ -280,8 +313,10 @@ int main()
                                                 float prixChange;
                                                 int stockChange;
                                                 char descriptionChange[100];
+
                                                 idChange = produits[j].idProduit;
                                                 produits[j].idProduit = produits[j + 1].idProduit;
+                                                produits[j + 1].idProduit = idChange;
                                                 strcpy(nomChange, produits[j].nom);
                                                 strcpy(produits[j].nom, produits[j + 1].nom);
                                                 strcpy(produits[j + 1].nom, nomChange);
@@ -303,49 +338,75 @@ int main()
                                             }
                                         }
                                     }
+                                    for (int i = 0; i < 5; i++)
+                                    {
+                                        printf("======================\n");
+                                        printf("id de produit : %d\n", produits[i].idProduit);
+                                        printf("nom de produit : %s\n", produits[i].nom);
+                                        printf("categorie de produit : %s\n", produits[i].categorie);
+                                        printf("prix de produit : %.2fDH\n", produits[i].prix);
+                                        printf("description de produit : %s\n", produits[i].description);
+                                    }
+
                                 default:
                                     break;
                                 }
                             } while (choixTriCroissanat != 3);
+                            break;
+                        case 2:
+                            for (int i = 0; i < 5; i++)
+                            {
+                                for (int j = 0; j < 5 - i - 1; j++)
+                                {
+                                    if ((int)produits[j].nom > (int)produits[j + 1].nom)
+                                    {
+                                        int idChange;
+                                        char nomChange[30];
+                                        char categorieChange[30];
+                                        float prixChange;
+                                        int stockChange;
+                                        char descriptionChange[100];
+                                        idChange = produits[j].idProduit;
+                                        produits[j].idProduit = produits[j + 1].idProduit;
+                                        produits[j + 1].idProduit = idChange;
+                                        strcpy(nomChange, produits[j].nom);
+                                        strcpy(produits[j].nom, produits[j + 1].nom);
+                                        strcpy(produits[j + 1].nom, nomChange);
+                                        strcpy(categorieChange, produits[j].categorie);
+                                        strcpy(produits[j].categorie, produits[j + 1].categorie);
+                                        strcpy(produits[j + 1].categorie, categorieChange);
+                                        strcpy(descriptionChange, produits[j].description);
+                                        strcpy(produits[j].description, produits[j + 1].description);
+                                        strcpy(produits[j + 1].description, descriptionChange);
+                                        prixChange = produits[j].prix;
+                                        produits[j].prix = produits[j + 1].prix;
+                                        produits[j + 1].prix = prixChange;
 
+                                        stockChange = produits[j].stock;
+                                        produits[j].stock = produits[j + 1].stock;
+                                        produits[j + 1].stock = stockChange;
+                                    }
+                                }
+                            }
+                            for (int i = 0; i < 5; i++)
+                            {
+                                printf("======================\n");
+                                printf("id de produit : %d\n", produits[i].idProduit);
+                                printf("nom de produit : %s\n", produits[i].nom);
+                                printf("categorie de produit : %s\n", produits[i].categorie);
+                                printf("prix de produit : %.2fDH\n", produits[i].prix);
+                                printf("description de produit : %s\n", produits[i].description);
+                            }
                             break;
 
                         default:
+                            printf("invalide input\n");
                             break;
                         }
                     } while (choixTri != 3);
                 case 4:
-                for (int i = 0; i < countProduit; i++)
-            {
-                printf("produit %d:\n", i + 1);
-                printf("id de produit : %d\n", produits[i].idProduit);
-                printf("nom de produit : %s\n", produits[i].nom);
-                printf("categorie de produit : %s\n", produits[i].categorie);
-                printf("prix de produit : %.2f\n", produits[i].prix);
-                printf("prix de produit : %d\n", produits[i].stock);
-                printf("description de produit : %s\n", produits[i].description);
-            }
-                break;
-                default:
-                printf("invalide input");
-                    break;
-                }
-
-            } while (choixCatalogue != 5);
-
-            break;
-        case 4:
-            int choixCaregorie , produitAcheter;
-            for (int i = 0; i < countProduit; i++)
-            {
-                printf("%d.%s/n",i+1, produits[i].categorie);
-            }
-            printf("votre choix : ");
-            scanf("%d",&choixCatalogue);
-            for (int i = 0; i < countProduit; i++)
-            {
-                if(strcmp(produits[i].categorie , produits[choixCaregorie-1].categorie)==0){
-                 
+                    for (int i = 0; i < 5; i++)
+                    {
                         printf("produit %d:\n", i + 1);
                         printf("id de produit : %d\n", produits[i].idProduit);
                         printf("nom de produit : %s\n", produits[i].nom);
@@ -353,21 +414,77 @@ int main()
                         printf("prix de produit : %.2f\n", produits[i].prix);
                         printf("prix de produit : %d\n", produits[i].stock);
                         printf("description de produit : %s\n", produits[i].description);
-                   
-                    
+                    }
+                    break;
+                default:
+                    printf("invalide input");
+                    break;
+                }
+
+            } while (choixCatalogue != 5);
+
+            break;
+        case 4:
+
+            for (int i = 0; i < 5; i++)
+            {
+                printf("%d.%s\n", i + 1, produits[i].categorie);
+            }
+            getchar();
+            printf("votre choix : ");
+            scanf("%d", &choixCatalogue);
+            for (int i = 0; i < 5; i++)
+            {
+                if (strcmp(produits[i].categorie, produits[choixCatalogue - 1].categorie) == 0)
+                {
+
+                    printf("produit %d:\n", i + 1);
+                    printf("id de produit : %d\n", produits[i].idProduit);
+                    printf("nom de produit : %s\n", produits[i].nom);
+                    printf("categorie de produit : %s\n", produits[i].categorie);
+                    printf("prix de produit : %.2f\n", produits[i].prix);
+                    printf("stock de produit : %d\n", produits[i].stock);
+                    printf("description de produit : %s\n", produits[i].description);
                 }
             }
+
             printf("quel numero de produit qui veux acheter : ");
-            scanf("%d",&produitAcheter);
-            if (clients[count].solde < produits[produitAcheter-1].prix)
+            scanf("%d", &produitAcheter);
+            if (clients[count].solde < produits[produitAcheter - 1].prix)
             {
                 printf("pas de l argent\n");
-            }else {
-                clients[count].solde-=produits[produitAcheter-1].prix;
             }
-            
+            else
+            {
+
+                clients[count].solde -= produits[produitAcheter - 1].prix;
+                produits[produitAcheter - 1].stock -= 1;
+                historique[countHistorique].id = countHistorique + 1;
+                strcpy(historique[countHistorique].nomProduit, produits[produitAcheter - 1].nom);
+                historique[countHistorique].date = getDate();
+                historique[countHistorique].prixProduit = produits[produitAcheter - 1].prix;
+                countHistorique++;
+                printf("achat succes\n");
+            }
+
             break;
         case 5:
+        if (!countHistorique)
+        {
+            printf("pas de historique\n");
+        }else{
+        
+            printf("historique :\n");
+            for (int i = 0; i < countHistorique; i++)
+            {
+                printf("id : %d\n", historique[i].id);
+                printf("nom de produit : %s\n", historique[i].nomProduit);
+                printf("date : %02d/%02d/%d\n",historique[i].date.jour,historique[i].date.mois,historique[i].date.annee);
+            }
+        }
+            break;
+            case 0:
+            printf("tu quitter le system\n");
             break;
         default:
             printf("invalide input\n");
