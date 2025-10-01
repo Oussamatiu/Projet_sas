@@ -71,10 +71,10 @@ Date getDate()
 {
     Date now;
     time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    now.jour = tm.tm_mday;
-    now.mois = tm.tm_mon + 1;
-    now.annee = tm.tm_year + 1900;
+    struct tm *tm = localtime(&t);
+    now.jour = tm->tm_mday;
+    now.mois = tm->tm_mon + 1;
+    now.annee = tm->tm_year + 1900;
     return now;
 }
 
